@@ -1,9 +1,9 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
-  title: Bank Argent API documentation version 2
+  title: Bank Argent API documentation
   description: Contains all available API endpoints in this codebase
-  version: '1.0.0'
-  termsOfService: 'http://swagger.io/terms/'
+  version: "1.0.0"
+  termsOfService: "http://swagger.io/terms/"
 host: localhost:3001
 basePath: /api/v1
 schemes:
@@ -67,7 +67,7 @@ paths:
       description: API for fetching a user profile
       responses:
         '200':
-          description: User profile retrieved successfully
+          description: User profile retrieved successully
           schema:
             $ref: '#/definitions/ApiResponse'
         '400':
@@ -92,90 +92,117 @@ paths:
         - application/json
       responses:
         '200':
-          description: User profile retrieved successfully
+          description: User profile updated successfully
           schema:
             $ref: '#/definitions/ApiResponse'
         '400':
           description: Invalid Fields
         '500':
           description: Internal Server Error
-  
-  
-  /user/transaction/:
-        get:
-            security:
-                - Bearer: []
-            tags:
-                - Transaction module
-            summary: Transaction Show API
-            description: API for showing a transaction
-            parameters:
-                - in: header
-                  name: Authorization
-                  description: Attach Bearer JWT token
-                  required: true
-                  type: string
-                - in: query
-                  name: idAccount
-                  description: Id of the account
-                  required: true
-                  type: string
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: Transaction retrieved successfully
-                    schema:
-                        $ref: "#/definitions/ApiTransactionResponse"
-                "400":
-                    description: Invalid Fields
-                "401":
-                    description: Unauthorized
-                "404":
-                    description: Transaction not found
-                "500":
-                    description: Internal Server Error
-  /user/transaction/{idTransaction}:
-        put:
-            security:
-                - Bearer: []
-            tags:
-                - Transaction module
-            summary: Transaction Edit API
-            description: API for updating a transaction
-            parameters:
-                - in: header
-                  name: Authorization
-                  description: Attach Bearer JWT token
-                  required: true
-                  type: string
-                - in: path
-                  name: idTransaction
-                  description: Id of the transaction that needs to be edited
-                  required: true
-                  type: string
-                - in: body
-                  name: body
-                  description: Edit transaction
-                  required: true
-                  schema:
-                      $ref: "#/definitions/editTransaction"
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: Transaction edited successfully
-                    schema:
-                        $ref: "#/definitions/ApiTransactionResponse"
-                "400":
-                    description: Invalid Fields
-                "401":
-                    description: Unauthorized
-                "404":
-                    description: Transaction not found
-                "500":
-                    description: Internal Server Error
-        
+  /account/{userId}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Account Module
+      summary: Find account by Id
+      description: API for fetching all account of the user
+      parameters:
+        - name: userId
+          in: path
+          description: UserId of user to return
+          required: true
+          schema:
+            type: string
+            example: 6522b0cd0039a563cc53dc7f
+      responses:
+        '200':
+          description: User Account retrieved Successfully
+          schema:
+            $ref: "#/definitions/AccountResponse"
+        '400':
+          description: Invalid Fields
+        '404':
+          description: Account not found
+        '500':
+          description: Internal Server Error
+  /transaction/{accountId}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: Find transactions by accountId
+      description: API for fetching all transactions for the current month of an account
+      parameters:
+        - name: accountId
+          in: path
+          description: Id of an account to return
+          required: true
+          schema:
+            type: string
+            example: 1646446
+        - name: current date
+          in: query
+          description: Current Month Data to return
+          required: true
+          schema:
+            type: string
+            example: 2023-10-17T15:02:08.083Z
+      responses:
+        '200':
+          description: User Transactions retrieved Successfully
+          schema:
+            $ref: "#/definitions/TransactionResponse"
+        '400':
+          description: Invalid Fields
+        '404':
+          description: Transaction not found
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal Server Error
+  /transaction/edit/{transactionId}:
+    put:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: User Transaction edit
+      description: API for editing a transaction detail
+      parameters:
+        - name: transactionId
+          in: path
+          description: Id of a transaction to update
+          required: true
+          schema:
+            type: string
+            example: 473684
+        - name: category
+          in: query
+          description: Name of category to update
+          schema:
+            type: string
+            example: New Name
+        - name: note
+          in: query
+          description: Name of note to update
+          schema:
+            type: string
+            example: New lorem ipsum
+      responses:
+        '200':
+          description: User Transactions updated Successfully
+          schema:
+            $ref: "#/definitions/TransactionDetailResponse"
+        '400':
+          description: Invalid Fields
+        '404':
+          description: Transaction not found
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal Server Error
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -231,84 +258,8 @@ definitions:
     properties:
       userName:
         type: string
-
-  # Transaction API
-  allTransactionsResponse:
-    properties:
-      status:
-        type: integer
-      message:
-        type: string
-      body:
-        type: object
-        properties:
-          transaction_0:
-            type: object
-            description: First transaction
-            properties:
-              id:
-                type: string
-                description: Id of the first transaction
-              date:
-                type: string
-                description: Date of the first transaction
-              amount:
-                type: number
-                description: Amount of the first transaction
-              description:
-                type: string
-                description: Description of the first transaction
-              category:
-                type: string
-                description: Category of the first transaction
-              notes:
-                type: string
-                description: Notes of the first transaction
-          transaction_1:
-            type: object
-            description: Second transaction
-            properties:
-              id:
-                type: string
-                description: Id of the second transaction
-              date:
-                type: string
-                description: Date of the second transaction
-              amount:
-                type: number
-                description: Amount of the second transaction
-              description:
-                type: string
-                description: Description of the second transaction
-              category:
-                type: string
-                description: Category of the second transaction
-              notes:
-                type: string
-                description: Notes of the second transaction
-          transaction_2:
-            type: object
-            description: Third transaction
-            properties:
-              id:
-                type: string
-                description: Id of the third transaction
-              date:
-                type: string
-                description: Date of the third transaction
-              amount:
-                type: number
-                description: Amount of the third transaction
-              description:
-                type: string
-                description: Description of the third transaction
-              category:
-                type: string
-                description: Category of the third transaction
-              notes:
-                type: string
-                description: Notes of the third transaction
-  ApiTransactionResponse:
+  AccountResponse:
+    type: object
     properties:
       status:
         type: integer
@@ -319,45 +270,68 @@ definitions:
         properties:
           id:
             type: string
-            description: Id of the transaction
+            example: 466146464
+          accountType:
+            type: string
+            example: Argent Bank Credit Card
+          amount:
+            type: string
+            example: 2083.31
+          balance statut:
+            type: string
+            example: Current Balance
+  TransactionResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        type: object
+        properties:
+          transactionId:
+            type: string
+            example: 16153486
           date:
             type: string
-            description: Date of the transaction
-          amount:
-            type: number
-            description: Amount of the transaction
+            example: 2023-10-17T15:02:08.083Z
           description:
             type: string
-            description: Description of the transaction
+            example: Golden Sun Bakery
+          amount:
+            type: string
+            example: "$8.00"
+          balance:
+            type: string
+            example: "$298"
+          transactionType:
+            type: string
+            example: Electronic
           category:
             type: string
-            description: Category of the transaction
-          notes:
+            example: Food
+          note:
             type: string
-            description: Notes of the transaction
-  addTransaction:
+            example: lorem ipsum
+  TransactionDetailResponse:
+    type: object
     properties:
-      accountId:
+      status:
+        type: integer
+      message:
         type: string
-        description: AccountId containing the new transaction
-      amount:
-        type: number
-        description: Amount of the new transaction
-      description:
-        type: string
-        description: Description of the new transaction
-      category:
-        type: string
-        description: Category of the new transaction
-      notes:
-        type: string
-        description: Notes of the new transaction
-  editTransaction:
-    properties:
-      category:
-        type: string
-        description: New category of this transaction
-      notes:
-        type: string
-        description: New notes of this transaction
+      body:
+        type: object
+        properties:
+          transactionId:
+            type: string
+            example: 16153486
+          category:
+            type: string
+            example: New Name
+          note:
+            type: string
+            example: New lorem Ipsum
+
 
