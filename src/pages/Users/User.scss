@@ -1,0 +1,24 @@
+main{
+    display: flex;
+    flex-direction: column;
+   .account {
+    display: flex;
+    flex-direction: c;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid black;
+    
+    width: 80%;
+    margin: 0 auto;
+   
+    padding: 1.5rem;
+    box-sizing: border-box;
+    text-align: left;
+    margin-bottom:40px;
+    .header {
+        color: #fff;
+        margin-bottom: 2rem;
+    }
+} 
+}
+
