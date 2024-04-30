@@ -7,331 +7,374 @@ info:
 host: localhost:3001
 basePath: /api/v1
 schemes:
-  - http
+- http
 paths:
-  /user/login:
-    post:
-      tags:
-        - User Module
-      summary: Login
-      description: API for Login
-      parameters:
-        - in: body
-          name: body
-          description: Login Payload
-          required: true
-          schema:
-            $ref: '#/definitions/Login'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Login Successfully
-          schema:
-            $ref: '#/definitions/LoginResponse'
-        '400':
-          description: Invalid Fields
-        '500':
-          description: Internal Server Error
-  /user/signup:
-    post:
-      tags:
-        - User Module
-      summary: Signup
-      description: API for Signup
-      parameters:
-        - in: body
-          name: body
-          description: Signup Payload
-          required: true
-          schema:
-            $ref: '#/definitions/User'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Signup Successfully
-          schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
-          description: Invalid Fields
-        '500':
-          description: Internal Server Error
-  /user/profile:
-    post:
-      security:
-        - Bearer: []
-      tags:
-        - User Module
-      summary: User Profile API
-      description: API for fetching a user profile
-      responses:
-        '200':
-          description: User profile retrieved successully
-          schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
-          description: Invalid Fields
-        '500':
-          description: Internal Server Error
-    put:
-      security:
-        - Bearer: []
-      tags:
-        - User Module
-      summary: User Profile API
-      description: API for updating a user profile
-      parameters:
-        - in: body
-          name: body
-          description: Update user profile attributes
-          required: true
-          schema:
-            $ref: '#/definitions/UserProfile'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: User profile updated successfully
-          schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
-          description: Invalid Fields
-        '500':
-          description: Internal Server Error
-  /account/{userId}:
-    get:
-      security:
-        - Bearer: []
-      tags:
-        - Account Module
-      summary: Find account by Id
-      description: API for fetching all account of the user
-      parameters:
-        - name: userId
-          in: path
-          description: UserId of user to return
-          required: true
-          schema:
-            type: string
-            example: 6522b0cd0039a563cc53dc7f
-      responses:
-        '200':
-          description: User Account retrieved Successfully
-          schema:
-            $ref: "#/definitions/AccountResponse"
-        '400':
-          description: Invalid Fields
-        '404':
-          description: Account not found
-        '500':
-          description: Internal Server Error
-  /transaction/{accountId}:
-    get:
-      security:
-        - Bearer: []
-      tags:
-        - Transaction Module
-      summary: Find transactions by accountId
-      description: API for fetching all transactions for the current month of an account
-      parameters:
-        - name: accountId
-          in: path
-          description: Id of an account to return
-          required: true
-          schema:
-            type: string
-            example: 1646446
-        - name: current date
-          in: query
-          description: Current Month Data to return
-          required: true
-          schema:
-            type: string
-            example: 2023-10-17T15:02:08.083Z
-      responses:
-        '200':
-          description: User Transactions retrieved Successfully
-          schema:
-            $ref: "#/definitions/TransactionResponse"
-        '400':
-          description: Invalid Fields
-        '404':
-          description: Transaction not found
-        '405':
-          description: Invalid input
-        '500':
-          description: Internal Server Error
-  /transaction/edit/{transactionId}:
-    put:
-      security:
-        - Bearer: []
-      tags:
-        - Transaction Module
-      summary: User Transaction edit
-      description: API for editing a transaction detail
-      parameters:
-        - name: transactionId
-          in: path
-          description: Id of a transaction to update
-          required: true
-          schema:
-            type: string
-            example: 473684
-        - name: category
-          in: query
-          description: Name of category to update
-          schema:
-            type: string
-            example: New Name
-        - name: note
-          in: query
-          description: Name of note to update
-          schema:
-            type: string
-            example: New lorem ipsum
-      responses:
-        '200':
-          description: User Transactions updated Successfully
-          schema:
-            $ref: "#/definitions/TransactionDetailResponse"
-        '400':
-          description: Invalid Fields
-        '404':
-          description: Transaction not found
-        '405':
-          description: Invalid input
-        '500':
-          description: Internal Server Error
+/user/login:
+post:
+tags:
+- User Module
+summary: Login
+description: API for Login
+parameters:
+- in: body
+name: body
+description: Login Payload
+required: true
+schema:
+$ref: "#/definitions/Login"
+produces:
+- application/json
+responses:
+"200":
+description: Login Successfully
+schema:
+$ref: "#/definitions/LoginResponse"
+"400":
+description: Invalid Fields
+"500":
+description: Internal Server Error
+
+/user/signup:
+post:
+tags:
+- User Module
+summary: Signup
+description: API for Signup
+parameters:
+- in: body
+name: body
+description: Signup Payload
+required: true
+schema:
+$ref: "#/definitions/User"
+produces:
+- application/json
+responses:
+"200":
+description: Signup Successfully
+schema:
+$ref: "#/definitions/ApiResponse"
+"400":
+description: Invalid Fields
+"500":
+description: Internal Server Error
+
+/user/profile:
+post:
+security:
+- Bearer: []
+tags:
+- User Module
+summary: User Profile API
+description: API for fetching a user profile
+parameters:
+- in: header
+type: string
+name: Authorization
+description: Attach Bearer JWT token
+required: true
+produces:
+- application/json
+responses:
+"200":
+description: User profile retrieved successully
+schema:
+$ref: "#/definitions/ApiResponse"
+"400":
+description: Invalid Fields
+"500":
+description: Internal Server Error
+put:
+security:
+- Bearer: []
+tags:
+- User Module
+summary: User Profile API
+description: API for updating a user profile
+parameters:
+- in: header
+type: string
+name: Authorization
+description: Attach Bearer JWT token
+required: true
+- in: body
+name: body
+description: Update user profile attributes
+required: true
+schema:
+$ref: "#/definitions/UserProfile"
+produces:
+- application/json
+responses:
+"200":
+description: User profile retrieved successully
+schema:
+$ref: "#/definitions/ApiResponse"
+"400":
+description: Invalid Fields
+"500":
+description: Internal Server Error
+
+/user/accounts:
+get:
+security:
+- Bearer: []
+tags:
+- Account Module
+summary: User Accounts API
+description: API for fetching user's accounts
+parameters:
+- in: header
+type: string
+name: Authorization
+description: Attach Bearer JWT token
+required: true
+produces:
+- application/json
+responses:
+"200":
+description: Accounts data retrieved successully
+schema:
+$ref: "#/definitions/UserAccounts"
+"400":
+description: Invalid Fields
+"401":
+description: Unauthorized, missing or invalid Bearer token
+"403":
+description: Forbidden. The client does not have access rights to the content
+"500":
+description: Internal Server Error
+
+/account/{accountID}/transactions:
+get:
+security:
+- Bearer: []
+tags:
+- Account Module
+summary: User Account Transactions API
+description: API for fetching current month account transactions
+parameters:
+- in: header
+type: string
+name: Authorization
+description: Attach Bearer JWT token
+required: true
+- name: accountID
+in: path
+type: string
+required: true
+produces:
+- application/json
+responses:
+"200":
+description: Transactions data retrieved successully
+schema:
+$ref: "#/definitions/AccountTransactions"
+"400":
+description: Invalid Fields
+"401":
+description: Unauthorized, missing or invalid Bearer token
+"403":
+description: Forbidden. The client does not have access rights to the content
+"500":
+description: Internal Server Error
+
+/account/{accountID}/transactions/{transactionID}:
+put:
+security:
+- Bearer: []
+tags:
+- Account Module
+summary: Update transaction details API
+description: API for updating / deleting notes or category details of a specific transaction. To delete a category / note provide a null value in body
+parameters:
+- in: header
+type: string
+name: Authorization
+description: Attach Bearer JWT token
+required: true
+- name: accountID
+in: path
+type: string
+required: true
+- name: transactionID
+in: path
+type: string
+required: true
+- in: body
+name: body
+description: Transaction details to update
+required: true
+schema:
+$ref: "#/definitions/TransactionUpdate"
+produces:
+- application/json
+responses:
+"200":
+description: Transaction updated successully
+schema:
+$ref: "#/definitions/UpdateTransactionAPIResponse"
+"400":
+description: Invalid Fields
+"401":
+description: Unauthorized, missing or invalid Bearer token
+"403":
+description: Forbidden. The client does not have access rights to the content
+"500":
+description: Internal Server Error
+
 securityDefinitions:
-  Bearer:
-    type: apiKey
-    name: Authorization
-    in: header
+Bearer:
+type: apiKey
+name: Authorization
+in: header
 definitions:
-  User:
-    properties:
-      email:
-        type: string
-        description: user email
-      password:
-        type: string
-        description: user password
-      firstName:
-        type: string
-        description: user first name
-      lastName:
-        type: string
-        description: user last name
-      userName:
-        type: string
-        description: user public name
-  Login:
-    properties:
-      email:
-        type: string
-        description: user email
-      password:
-        type: string
-        description: user password
-  ApiResponse:
-    type: object
-    properties:
-      status:
-        type: integer
-      message:
-        type: string
-      body:
-        type: object
-        properties:
-          id:
-            type: string
-          email:
-            type: string
-  LoginResponse:
-    type: object
-    properties:
-      token:
-        type: string
-  UserProfile:
-    type: object
-    properties:
-      userName:
-        type: string
-  AccountResponse:
-    type: object
-    properties:
-      status:
-        type: integer
-      message:
-        type: string
-      body:
-        type: object
-        properties:
-          id:
-            type: string
-            example: 466146464
-          accountType:
-            type: string
-            example: Argent Bank Credit Card
-          amount:
-            type: string
-            example: 2083.31
-          balance statut:
-            type: string
-            example: Current Balance
-  TransactionResponse:
-    type: object
-    properties:
-      status:
-        type: integer
-      message:
-        type: string
-      body:
-        type: object
-        properties:
-          transactionId:
-            type: string
-            example: 16153486
-          date:
-            type: string
-            example: 2023-10-17T15:02:08.083Z
-          description:
-            type: string
-            example: Golden Sun Bakery
-          amount:
-            type: string
-            example: "$8.00"
-          balance:
-            type: string
-            example: "$298"
-          transactionType:
-            type: string
-            example: Electronic
-          category:
-            type: string
-            example: Food
-          note:
-            type: string
-            example: lorem ipsum
-  TransactionDetailResponse:
-    type: object
-    properties:
-      status:
-        type: integer
-      message:
-        type: string
-      body:
-        type: object
-        properties:
-          transactionId:
-            type: string
-            example: 16153486
-          category:
-            type: string
-            example: New Name
-          note:
-            type: string
-            example: New lorem Ipsum
+User:
+properties:
+email:
+type: string
+description: user email
+password:
+type: string
+description: user password
+firstName:
+type: string
+description: user first name
+lastName:
+type: string
+description: user last name
+Login:
+properties:
+email:
+type: string
+description: user email
+password:
+type: string
+description: user password
+ApiResponse:
+type: object
+properties:
+status:
+type: integer
+message:
+type: string
+body:
+type: object
+properties:
+id:
+type: string
+email:
+type: string
+LoginResponse:
+type: object
+properties:
+token:
+type: string
+UserProfile:
+type: object
+properties:
+firstName:
+type: string
+lastName:
+type: string
+UserAccounts:
+type: object
+properties:
+status:
+type: integer
+message:
+type: string
+body:
+type: array
+items:
+type: object
+properties:
+userID:
+type: string
+accountID:
+type: string
+accountType:
+type: string
+balance:
+type: integer
+balanceType:
+type: string
+AccountTransactions:
+type: object
+properties:
+status:
+type: integer
+message:
+type: string
+body:
+type: array
+items:
+type: object
+properties:
+transactionID:
+type: string
+date:
+type: string
+description: transaction date
+description:
+type: string
+description: transaction description
+amount:
+type: integer
+description: transaction account
+balance:
+type: integer
+description: amount balance
+transactionType:
+type: string
+description: transaction type
+category:
+type: string
+description: transaction category
+notes:
+type: string
+description: transaction related notes
+TransactionUpdate:
+type: object
+properties:
+category:
+type: string
+description: transaction category
+notes:
+type: string
+description: transaction related notes
+UpdateTransactionAPIResponse:
+type: object
+properties:
+status:
+type: integer
+message:
+type: string
+body:
+type: object
+properties:
+transactionID:
+type: string
+date:
+type: string
+description: transaction date
+description:
+type: string
+description: transaction description
+amount:
+type: integer
+description: transaction account
+balance:
+type: integer
+description: amount balance
+transactionType:
+type: string
+description: transaction type
+category:
+type: string
+description: transaction category
+notes:
+type: string
+description: transaction related notes
 
 
